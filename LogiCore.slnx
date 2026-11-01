@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LogiCore.App/LogiCore.App.csproj" />
+  <Project Path="LogiCore.Domain/LogiCore.Domain.csproj" />
+  <Project Path="LogiCore.Tests/LogiCore.Tests.csproj" />
+</Solution>
