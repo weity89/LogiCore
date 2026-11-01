@@ -4,13 +4,15 @@ public class PerishableCargo : Cargo, ITemperatureSensitive, IInsurable
 {
     public DateTime ExpirationDate { get; }
 
-    double ITemperatureSensitive.RequiredTemperatureC { get; }
+    private readonly double _requiredTemperatureC;
+
+    double ITemperatureSensitive.RequiredTemperatureC => _requiredTemperatureC;
 
     public PerishableCargo(string description, double weightKg, double volumeM3, decimal declaredValue, 
         DateTime expirationDate, double requiredTemperatureC)
         : base(description, weightKg, volumeM3, declaredValue)
     {
         ExpirationDate = expirationDate;
-        ((ITemperatureSensitive)this).RequiredTemperatureC = requiredTemperatureC;
+        _requiredTemperatureC = requiredTemperatureC;
     }
 }
