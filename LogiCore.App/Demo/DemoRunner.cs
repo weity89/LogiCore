@@ -197,6 +197,29 @@ public class DemoRunner
 
     private void RunSerialization(List<Order> orders)
     {
-        Console.WriteLine("Сериализация");
+        var stateManager = new StateManager();
+    
+        Console.WriteLine("\n--- Сохранение ---");
+        int oldFleetCount = _fleet.Count;
+        int oldOrdersCount = orders.Count;
+        stateManager.SaveState(_fleet, orders);
+
+        Console.WriteLine("\n--- Очистка памяти ---");
+        Console.WriteLine($"Было: {oldFleetCount} ТС, {oldOrdersCount} заказов.");
+    
+        _fleet.Clear();
+        orders.Clear();
+        Console.WriteLine($"После очистки: {_fleet.Count} ТС, {orders.Count} заказов.");
+
+        Console.WriteLine("\n--- Загрузка из файла ---");
+        var loaded = stateManager.LoadState();
+        if (loaded.HasValue)
+        {
+            var (newFleet, newOrders) = loaded.Value;
+            Console.WriteLine($"Стало: {newFleet.Count} ТС, {newOrders.Count} заказов.");
+        
+            bool match = newFleet.Count == oldFleetCount && newOrders.Count == oldOrdersCount;
+            Console.WriteLine($"[VERIFY] Данные совпадают: {(match ? "ДА" : "НЕТ")}");
+        }
     }
 }
