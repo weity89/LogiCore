@@ -16,6 +16,7 @@ public class DemoRunner
 {
     private readonly DeliveryService _service;
     private readonly List<Vehicle> _fleet;
+    private readonly List<Order> _ordersList = new();
 
     public DemoRunner(DeliveryService service, List<Vehicle> fleet)
     {
@@ -48,7 +49,32 @@ public class DemoRunner
         {
             RunLifecycle(lifecycleOrder);
         }
-
+        
+        Console.WriteLine("\n=== Подготовка данных для отчетов ===");
+        if (orders.TryGetValue("Standard", out var standardOrder))
+        {
+            var truck = _fleet.OfType<Truck>().First();
+            standardOrder.Assign(truck, 1000m); // Просто для отчета
+            _service.StartDelivery(standardOrder);
+            _service.CompleteDelivery(standardOrder);
+        }
+        
+        if (orders.TryGetValue("Perishable", out var perishableOrder))
+        {
+            var fridge = _fleet.OfType<RefrigeratorTruck>().First();
+            perishableOrder.Assign(fridge, 2000m);
+            _service.StartDelivery(perishableOrder);
+            _service.CompleteDelivery(perishableOrder);
+        }
+        
+        if (orders.TryGetValue("Oversized", out var oversizedOrderToPrepare)) 
+        {
+            var ship = _fleet.OfType<CargoShip>().First();
+            oversizedOrderToPrepare.Assign(ship, 5000m);
+            _service.StartDelivery(oversizedOrderToPrepare);
+            _service.CompleteDelivery(oversizedOrderToPrepare);
+        }
+        
         Console.WriteLine("\n=== 6. LINQ-отчеты (T8) ===");
         RunReports();
 
@@ -82,15 +108,19 @@ public class DemoRunner
         
         var standardCargo = new List<CargoEntity> { CargoFactory.Create("standard", "Одежда", 500, 10, 5000) };
         orders["Standard"] = _service.CreateOrder(customer, route, standardCargo);
+        _ordersList.Add(orders["Standard"]);
 
         var fragileCargo = new List<CargoEntity> { CargoFactory.Create("fragile", "Вазы", 100, 2, 20000) };
         orders["Fragile"] = _service.CreateOrder(customer, route, fragileCargo);
+        _ordersList.Add(orders["Fragile"]);
 
         var oversizedCargo = new List<CargoEntity> { CargoFactory.Create("oversized", "Станок", 15000, 100, 100000) };
         orders["Oversized"] = _service.CreateOrder(customer, route, oversizedCargo);
+        _ordersList.Add(orders["Oversized"]);
 
         var perishableCargo = new List<CargoEntity> { CargoFactory.Create("perishable", "Рыба", 200, 5, 10000) };
         orders["Perishable"] = _service.CreateOrder(customer, route, perishableCargo);
+        _ordersList.Add(orders["Perishable"]);
         
         
         var invalidCargo = new List<CargoEntity>
@@ -161,7 +191,8 @@ public class DemoRunner
 
     private void RunReports()
     {
-        Console.WriteLine("Отчеты");
+        var reportGenerator = new ReportGenerator(_ordersList, _fleet);
+        reportGenerator.GenerateAll();
     }
 
     private void RunSerialization(List<Order> orders)
