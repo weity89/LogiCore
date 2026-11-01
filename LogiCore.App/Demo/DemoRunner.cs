@@ -97,7 +97,15 @@ public class DemoRunner
             CargoFactory.Create("dangerous", "Кислота", 150, 3, 10000),
             CargoFactory.Create("oversized", "Труба", 5000, 30, 50000)
         };
-        foreach (var c in cargos) Console.WriteLine($"  - {c}");
+        foreach (var v in _fleet) 
+        {
+            Console.WriteLine($"  - {v} | Условия: {v.Conditions}");
+
+            if ((v.Conditions & TransportConditions.Refrigerated) != 0)
+                Console.WriteLine("    -> [Флаг] Поддерживает охлаждение");
+            if ((v.Conditions & TransportConditions.Pressurized) != 0)
+                Console.WriteLine("    -> [Флаг] Герметичный с поддувом");
+        }
     }
 
     private Dictionary<string, Order> CreateDemoOrders()

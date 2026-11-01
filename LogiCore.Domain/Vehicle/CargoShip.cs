@@ -8,6 +8,7 @@ public class CargoShip : Vehicle
     public CargoShip(string registrationNumber, double maxLoadKg, double maxVolumeM3, double averageSpeedKmH, decimal baseRatePerKm) 
         : base(registrationNumber, maxLoadKg, maxVolumeM3, averageSpeedKmH, baseRatePerKm)
     {
+        Conditions = TransportConditions.LongRange;
     }
 
     public override decimal CalculateDeliveryCost(Route route, IReadOnlyCollection<Cargo.Cargo> cargo)

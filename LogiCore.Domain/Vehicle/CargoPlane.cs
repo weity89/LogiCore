@@ -11,6 +11,8 @@ public class CargoPlane : Vehicle
         : base(registrationNumber, maxLoadKg, maxVolumeM3, averageSpeedKmH, baseRatePerKm)
     {
         CostPerKg = costPerKg;
+        
+        Conditions = TransportConditions.Sealed | TransportConditions.Pressurized;
     }
 
     public override decimal CalculateDeliveryCost(Route route, IReadOnlyCollection<Cargo.Cargo> cargo)

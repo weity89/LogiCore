@@ -11,6 +11,8 @@ public class RefrigeratorTruck : Vehicle
     public RefrigeratorTruck(string registrationNumber, double maxLoadKg, double maxVolumeM3, double averageSpeedKmH, decimal baseRatePerKm, double minTemp, double maxTemp) 
         : base(registrationNumber, maxLoadKg, maxVolumeM3, averageSpeedKmH, baseRatePerKm)
     {
+        Conditions = TransportConditions.Refrigerated | TransportConditions.Sealed;
+        
         MinTemperatureC = minTemp;
         MaxTemperatureC = maxTemp;
     }

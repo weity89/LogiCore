@@ -12,6 +12,16 @@ public enum VehicleState
     UnderMaintenance
 }
 
+[Flags]
+public enum TransportConditions
+{
+    None = 0,
+    Refrigerated = 1 << 0,
+    Sealed = 1 << 1,
+    Pressurized = 1 << 2,
+    LongRange = 1 << 3
+}
+
 public abstract class Vehicle : IEntity
 {
     public Guid Id { get; }
@@ -33,6 +43,8 @@ public abstract class Vehicle : IEntity
     public double AverageSpeedKmH { get; }
     public decimal BaseRatePerKm { get; }
     public VehicleState State { get; set; } = VehicleState.Free;
+    
+    public TransportConditions Conditions { get; protected set; } = TransportConditions.None;
 
     protected Vehicle(string registrationNumber, double maxLoadKg, double maxVolumeM3, double averageSpeedKmH, decimal baseRatePerKm)
     {
@@ -59,3 +71,4 @@ public abstract class Vehicle : IEntity
     public override bool Equals(object? obj) => obj is Vehicle other && Id == other.Id;
     public override int GetHashCode() => Id.GetHashCode();
 }
+

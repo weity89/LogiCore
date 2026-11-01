@@ -10,6 +10,8 @@ public sealed class DroneCourier : Vehicle
     public DroneCourier(string registrationNumber, double maxLoadKg, double maxVolumeM3, double averageSpeedKmH, decimal baseRatePerKm, double maxRangeKm) 
         : base(registrationNumber, maxLoadKg, maxVolumeM3, averageSpeedKmH, baseRatePerKm)
     {
+        Conditions = TransportConditions.LongRange; 
+        
         MaxRangeKm = maxRangeKm;
     }
 
