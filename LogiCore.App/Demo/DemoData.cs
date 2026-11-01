@@ -12,12 +12,12 @@ public static class DemoData
     {
         var fleet = new List<Vehicle>
         {
-            VehicleFactory.Create("truck", "TRK-001", 10000, 50, 80, 10),
-            VehicleFactory.Create("refrigerator", "REF-002", 5000, 30, 70, 15),
-            VehicleFactory.Create("plane", "PLN-003", 20000, 100, 800, 50),
-            VehicleFactory.Create("ship", "SHP-004", 50000, 500, 30, 5),
-            VehicleFactory.Create("drone", "DRN-005", 10, 1, 60, 2),
-            VehicleFactory.Create("truck", "TRK-006", 8000, 40, 80, 9)
+            VehicleFactory.Create("truck", "TRK001", 10000, 50, 80, 10),
+            VehicleFactory.Create("refrigerator", "REF002", 5000, 30, 70, 15),
+            VehicleFactory.Create("plane", "PLN003", 20000, 100, 800, 50),
+            VehicleFactory.Create("ship", "SHP004", 50000, 500, 30, 5),
+            VehicleFactory.Create("drone", "DRN005", 10, 1, 60, 2),
+            VehicleFactory.Create("truck", "TRK006", 8000, 40, 80, 9)
         };
 
         var validator = new CargoCompatibilityValidator();

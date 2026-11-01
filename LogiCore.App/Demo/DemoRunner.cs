@@ -38,13 +38,13 @@ public class DemoRunner
         }
 
         Console.WriteLine("\n=== 4. Подбор ТС и расчет стоимости (Декораторы) ===");
-        if (orders.TryGetValue("Standard", out var standardOrder))
+        if (orders.TryGetValue("Fragile", out var fragileOrder))
         {
-            CalculateAndAssign(standardOrder);
+            CalculateAndAssign(fragileOrder);
         }
 
         Console.WriteLine("\n=== 5. Жизненный цикл заказа (События) ===");
-        if (orders.TryGetValue("Standard", out var lifecycleOrder))
+        if (orders.TryGetValue("Fragile", out var lifecycleOrder))
         {
             RunLifecycle(lifecycleOrder);
         }
@@ -120,7 +120,7 @@ public class DemoRunner
             Console.WriteLine($"Пытаемся назначить дрон для негабарита...");
             try
             {
-                _service.AssignVehicleToOrder(order, null!);
+                _service.ForceAssignVehicle(order, drone);
             }
             catch (Exception ex)
             {

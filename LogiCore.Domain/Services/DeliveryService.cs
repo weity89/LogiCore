@@ -104,4 +104,15 @@ public class DeliveryService
         
         OrderStatusChanged?.Invoke(this, new OrderStatusChangedEventArgs(order, oldStatus, order.Status));
     }
+    public void ForceAssignVehicle(Order.Order order, Vehicle.Vehicle vehicle)
+    {
+        var totalWeight = order.Cargos.Sum(c => c.WeightKg);
+        if (totalWeight > vehicle.MaxLoadKg)
+        {
+            VehicleOverloadAttempt?.Invoke(this, new VehicleOverloadAttemptEventArgs(order, vehicle, totalWeight));
+            throw new VehicleOverloadException($"ТС {vehicle.RegistrationNumber} не выдержит вес {totalWeight} кг.");
+        }
+        vehicle.State = VehicleState.InTransit;
+        order.Assign(vehicle, 0);
+    }
 }
