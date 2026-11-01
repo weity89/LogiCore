@@ -41,28 +41,35 @@ public class DeliveryService
     public void AssignVehicleToOrder(Order.Order order, ITariffStrategy tariffStrategy)
     {
         var suitableVehicle = _fleet
-            .Where(v => v.CanCarry(order.Cargos.First()))
+            .Where(v => v.State == VehicleState.Free)
+            .Where(v => v.CanCarry(order.Cargos.FirstOrDefault() ?? throw new LogisticsException("Нет грузов в заказе")))
             .OrderBy(v => v.CalculateDeliveryCost(order.Route, order.Cargos))
             .FirstOrDefault();
 
         if (suitableVehicle == null)
         {
+            var overloadVehicle = _fleet.FirstOrDefault(v => v.State == VehicleState.Free);
+            if (overloadVehicle != null)
+            {
+                double totalWeight = order.Cargos.Sum(c => c.WeightKg);
+                if (totalWeight > overloadVehicle.MaxLoadKg)
+                {
+                    VehicleOverloadAttempt?.Invoke(this, new VehicleOverloadAttemptEventArgs(order, overloadVehicle, totalWeight));
+                }
+            }
+        
             throw new LogisticsException("Нет подходящего свободного транспортного средства для данного заказа.");
         }
 
         decimal baseCost = suitableVehicle.CalculateDeliveryCost(order.Route, order.Cargos);
-
+        
         IDeliveryCost cost = new BaseDeliveryCost(baseCost);
-        cost = new InsuranceDecorator(cost, order.Cargos);
-        cost = new ExpressDecorator(cost);
-        
-        Console.WriteLine($"Расчет для заказа {order.Id}: {cost.Describe()} = {cost.Total:C}");
-
+    
         suitableVehicle.State = VehicleState.InTransit;
-        
+    
         var oldStatus = order.Status;
         order.Assign(suitableVehicle, cost.Total);
-        
+    
         OrderStatusChanged?.Invoke(this, new OrderStatusChangedEventArgs(order, oldStatus, order.Status));
     }
 
