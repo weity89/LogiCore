@@ -1,7 +1,7 @@
 ﻿using LogiCore.App.Demo;
 using LogiCore.App.Infrastructure;
 
-Console.WriteLine("=== LogiCore System Initialization ===");
+Console.WriteLine("=== LogiCore System ===");
 
 var (service, fleet, customer) = DemoData.Setup();
 var wrapper = new DeliveryServiceWrapper(service);
@@ -12,7 +12,8 @@ consoleNotifier.Subscribe(wrapper);
 var fileLogger = new FileLogger();
 fileLogger.Subscribe(wrapper);
 
-Console.WriteLine($"Клиент: {customer.Name}, Парк: {fleet.Count} ТС");
+var runner = new DemoRunner(service, fleet);
+runner.Run();
 
-Console.WriteLine("Готово к демо. Нажмите любую клавишу...");
+Console.WriteLine("\nДемо завершено. Нажмите любую клавишу...");
 Console.ReadKey();
