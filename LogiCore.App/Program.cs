@@ -2,7 +2,6 @@
 using LogiCore.App.Demo;
 using LogiCore.App.Infrastructure;
 using LogiCore.Domain.Order;
-using LogiCore.Domain.Vehicle;
 
 Console.WriteLine("=== LogiCore System ===");
 
@@ -10,6 +9,8 @@ var (service, fleet, customer) = DemoData.Setup();
 var wrapper = new DeliveryServiceWrapper(service);
 var consoleNotifier = new ConsoleNotifier();
 consoleNotifier.Subscribe(wrapper);
+
+var sharedOrders = new List<Order>();
 
 while (true)
 {
@@ -24,11 +25,11 @@ while (true)
     switch (choice)
     {
         case "1":
-            var runner = new DemoRunner(service, fleet);
+            var runner = new DemoRunner(service, fleet, sharedOrders);
             runner.Run();
             break;
         case "2":
-            var menu = new Menu(service, fleet);
+            var menu = new Menu(service, fleet, sharedOrders, customer);
             menu.Run();
             break;
         case "0":

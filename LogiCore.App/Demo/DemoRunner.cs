@@ -16,12 +16,13 @@ public class DemoRunner
 {
     private readonly DeliveryService _service;
     private readonly List<Vehicle> _fleet;
-    private readonly List<Order> _ordersList = new();
+    private readonly List<Order> _ordersList;
 
-    public DemoRunner(DeliveryService service, List<Vehicle> fleet)
+    public DemoRunner(DeliveryService service, List<Vehicle> fleet, List<Order> orders)
     {
         _service = service;
         _fleet = fleet;
+        _ordersList = orders;
     }
 
     public void Run()
